@@ -16,7 +16,11 @@ class _StartQuizState extends State<StartQuiz> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Image.asset('assets/images/quiz-logo.png', width: 250),
+        Image.asset('assets/images/quiz-logo.png',
+            width: 250,
+            color: const Color.fromARGB(
+                100, 255, 255, 255) //el primer valor es la opacidad
+            ),
         const SizedBox(
           height: 12.0,
         ),
@@ -30,17 +34,15 @@ class _StartQuizState extends State<StartQuiz> {
         const SizedBox(
           height: 12.0,
         ),
-        ElevatedButton(
-          onPressed: startQuiz,
-          style: ElevatedButton.styleFrom(
-              fixedSize: const Size(150, 40),
-              backgroundColor: Colors.amberAccent[400],
-              disabledBackgroundColor: Colors.amberAccent[300],
-              textStyle: const TextStyle(fontSize: 22)),
-          child: const Center(
-            child: Text('Start Quiz'),
-          ),
-        )
+        ElevatedButton.icon(
+            onPressed: startQuiz,
+            style: ElevatedButton.styleFrom(
+                fixedSize: const Size(150, 40),
+                backgroundColor: Colors.amberAccent[400],
+                disabledBackgroundColor: Colors.amberAccent[300],
+                textStyle: const TextStyle(fontSize: 18)),
+            icon: const Icon(Icons.arrow_forward),
+            label: const Text('Start Quiz'))
       ],
     );
   }
