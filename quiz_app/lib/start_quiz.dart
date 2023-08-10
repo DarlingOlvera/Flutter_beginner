@@ -35,7 +35,6 @@ class StartQuiz extends StatelessWidget {
             style: ElevatedButton.styleFrom(
                 fixedSize: const Size(150, 40),
                 backgroundColor: Colors.amberAccent[400],
-                disabledBackgroundColor: Colors.amberAccent[300],
                 textStyle: const TextStyle(fontSize: 18)),
             icon: const Icon(Icons.arrow_forward),
             label: const Text('Start Quiz'))

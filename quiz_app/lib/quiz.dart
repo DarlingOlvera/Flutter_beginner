@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_app/data/questions.dart';
 import 'package:quiz_app/questions_screen.dart';
 import 'package:quiz_app/start_quiz.dart';
 
@@ -26,10 +27,26 @@ class _QuizState extends State<Quiz> {
   //otra forma de abordar el conditional rendering de arriba sin hacer uso de initState()
   var activeScreen = 'start-screen';
 
+  //puede ser final porque no se le va a reasignar ningun valor
+  //solo se le iran añadiendo nuevos
+  List<String> selectedAnswers = [];
+
+  //Methods
   void switchScreen() {
     setState(() {
       activeScreen = 'questions-screen';
     });
+  }
+
+  void choosedAnswer(String answer) {
+    selectedAnswers.add(answer);
+
+    if (selectedAnswers.length == questions.length) {
+      setState(() {
+        selectedAnswers = [];
+        activeScreen = 'start-screen';
+      });
+    }
   }
 
   @override
@@ -38,7 +55,7 @@ class _QuizState extends State<Quiz> {
     Widget screenWidget = StartQuiz(switchScreen);
 
     if (activeScreen == 'questions-screen') {
-      screenWidget = const QuestionsScreen();
+      screenWidget = QuestionsScreen(onSelectAnswer: choosedAnswer);
     }
 
     return MaterialApp(
