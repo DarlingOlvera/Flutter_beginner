@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-class StartQuiz extends StatefulWidget {
-  const StartQuiz({super.key});
+class StartQuiz extends StatelessWidget {
+  const StartQuiz(this.initQuiz, {super.key});
 
-  @override
-  State<StartQuiz> createState() => _StartQuizState();
-}
-
-class _StartQuizState extends State<StartQuiz> {
-  //Methods
-  void startQuiz() {}
+  final void Function() initQuiz;
 
   @override
   Widget build(BuildContext context) {
@@ -22,20 +17,21 @@ class _StartQuizState extends State<StartQuiz> {
                 100, 255, 255, 255) //el primer valor es la opacidad
             ),
         const SizedBox(
-          height: 12.0,
+          height: 40.0,
         ),
-        const Text(
+        Text(
           'Learn flutter the fun way!',
-          style: TextStyle(
-            fontSize: 25.0,
-            color: Color.fromARGB(255, 249, 204, 245),
+          style: GoogleFonts.raleway(
+            fontSize: 22.0,
+            fontWeight: FontWeight.w500,
+            color: const Color.fromARGB(255, 249, 204, 245),
           ),
         ),
         const SizedBox(
           height: 12.0,
         ),
         ElevatedButton.icon(
-            onPressed: startQuiz,
+            onPressed: initQuiz,
             style: ElevatedButton.styleFrom(
                 fixedSize: const Size(150, 40),
                 backgroundColor: Colors.amberAccent[400],
