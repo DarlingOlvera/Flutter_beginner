@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:expense_tracker/models/expense.dart';
 
 final formatter = DateFormat.yMd();
 
 class NewExpense extends StatefulWidget {
-  const NewExpense({super.key});
+  const NewExpense({super.key, required this.onAddExpense});
+
+  final void Function(Expense expense) onAddExpense;
 
   @override
   State<NewExpense> createState() => _NewExpenseState();
@@ -51,20 +54,35 @@ class _NewExpenseState extends State<NewExpense> {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text('Invalid input'),
-          content: const Text('Please make sure all the fields are valid.'),
+          title: Text('Invalid input', style: GoogleFonts.raleway()),
+          content: Text('Please make sure all the fields are valid.',
+              style: GoogleFonts.raleway()),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(ctx);
               },
-              child: const Text('Okay'),
+              child: Text(
+                'Okay',
+                style: GoogleFonts.raleway(),
+              ),
             ),
           ],
         ),
       );
       return;
     }
+
+    //here...
+    widget.onAddExpense(
+      Expense(
+          title: _titleController.text,
+          amount: enteredAmount,
+          date: _selectedDate!,
+          category: _selectedCategory),
+    );
+
+    Navigator.pop(context);
   }
 
   //importante decirle a flutter que elimine el TextEditingController una vez ya no
@@ -81,7 +99,7 @@ class _NewExpenseState extends State<NewExpense> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
       child: Column(children: [
         Row(
           children: [
@@ -91,7 +109,8 @@ class _NewExpenseState extends State<NewExpense> {
               child: TextField(
                 controller: _titleController,
                 maxLength: 50,
-                decoration: const InputDecoration(label: Text('Expense name')),
+                decoration: InputDecoration(
+                    label: Text('Expense name', style: GoogleFonts.raleway())),
               ),
             ),
           ],
@@ -104,9 +123,12 @@ class _NewExpenseState extends State<NewExpense> {
               controller: _amountController,
               keyboardType: TextInputType.number,
               maxLength: 10,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 prefixText: '\$ ',
-                label: Text('Expense amount'),
+                label: Text(
+                  'Expense amount',
+                  style: GoogleFonts.raleway(),
+                ),
               ),
             ),
           ),
@@ -118,10 +140,12 @@ class _NewExpenseState extends State<NewExpense> {
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(_selectedDate == null
-                    ? 'No date selected'
-                    : formatter.format(
-                        _selectedDate!)), // el ! fuerza a flutter a entender que el valor no es null
+                Text(
+                  _selectedDate == null
+                      ? 'No date selected'
+                      : formatter.format(_selectedDate!),
+                  style: GoogleFonts.raleway(),
+                ), // el ! fuerza a flutter a entender que el valor no es null
                 IconButton(
                   onPressed: _openDatePicker,
                   icon: const Icon(Icons.calendar_month_rounded),
@@ -131,38 +155,43 @@ class _NewExpenseState extends State<NewExpense> {
           ),
         ]),
         //Dropdown button
-        Expanded(
-          child: Row(
-            children: [
-              DropdownButton(
-                value: _selectedCategory,
-                items: Category.values
-                    .map(
-                      (category) => DropdownMenuItem(
-                        value: category,
-                        child: Text(
-                          category.name.toUpperCase(),
-                        ),
+        Row(
+          children: [
+            DropdownButton(
+              value: _selectedCategory,
+              items: Category.values
+                  .map(
+                    (category) => DropdownMenuItem(
+                      value: category,
+                      child: Text(
+                        category.name.toUpperCase(),
+                        style: GoogleFonts.raleway(),
                       ),
-                    )
-                    .toList(),
-                onChanged: (val) {
-                  if (val == null) {
-                    return;
-                  }
-                  setState(() {
-                    _selectedCategory = val;
-                  });
-                },
-              ),
-            ],
-          ),
+                    ),
+                  )
+                  .toList(),
+              onChanged: (val) {
+                if (val == null) {
+                  return;
+                }
+                setState(() {
+                  _selectedCategory = val;
+                });
+              },
+            ),
+          ],
+        ),
+        const SizedBox(
+          height: 12,
         ),
         Row(
           children: [
             ElevatedButton(
               onPressed: _submitForm,
-              child: const Text('Save expense'),
+              child: Text(
+                'Save expense',
+                style: GoogleFonts.raleway(),
+              ),
             ),
             const SizedBox(
               width: 12,
@@ -172,7 +201,10 @@ class _NewExpenseState extends State<NewExpense> {
                 //clase proporcionada por flutter
                 Navigator.pop(context); //pop remueve el overlay de la pantalla
               },
-              child: const Text('Cancel'),
+              child: Text(
+                'Cancel',
+                style: GoogleFonts.raleway(),
+              ),
             ),
           ],
         )

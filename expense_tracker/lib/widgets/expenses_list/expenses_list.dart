@@ -3,9 +3,11 @@ import 'package:expense_tracker/models/expense.dart';
 import 'package:expense_tracker/widgets/expenses_list/expense_item.dart';
 
 class ExpensesList extends StatelessWidget {
-  const ExpensesList({super.key, required this.expenses});
+  const ExpensesList(
+      {super.key, required this.expenses, required this.onRemoveExpense});
 
   final List<Expense> expenses;
+  final void Function(Expense expense) onRemoveExpense;
   @override
   Widget build(BuildContext context) {
     //no se recomienda usar Column para listas de las cuales no se sabe el tamaño
@@ -16,6 +18,13 @@ class ExpensesList extends StatelessWidget {
     //ListView es scrollable por defecto
     return ListView.builder(
         itemCount: expenses.length,
-        itemBuilder: (context, index) => ExpenseItem(expenses[index]));
+        itemBuilder: (context, index) => Dismissible(
+              key: ValueKey(expenses[
+                  index]), //la key sirve como un identificador unico para el widget y la data relacionada al mismo
+              onDismissed: (direction) {
+                onRemoveExpense(expenses[index]);
+              },
+              child: ExpenseItem(expenses[index]),
+            ));
   }
 }
