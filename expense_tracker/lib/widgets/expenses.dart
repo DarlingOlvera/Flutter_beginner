@@ -68,6 +68,10 @@ class _ExpensesState extends State<Expenses> {
 
   @override
   Widget build(BuildContext context) {
+    //find out how much width its available
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+
     Widget mainContent = const Center(
       child: Text('Nothing to show'),
     );
@@ -79,25 +83,37 @@ class _ExpensesState extends State<Expenses> {
       );
     }
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Expense Tracker',
-            style: GoogleFonts.raleway(),
-          ),
-          actions: [
-            IconButton(onPressed: _expenseOverlay, icon: const Icon(Icons.add))
-          ],
+      appBar: AppBar(
+        title: Text(
+          'Expense Tracker',
+          style: GoogleFonts.raleway(),
         ),
-        body: Column(
-          children: [
-            Chart(expenses: _registeredExpenses),
-            //cuando hay casos donde una columna tiene otra columna dentro, flatter
-            //no sabe como manejar los espacios para ambas, se puede solucionar
-            //haciendo un wrap en la columna interna con el widget Expanded
-            Expanded(
-              child: mainContent,
+        actions: [
+          IconButton(onPressed: _expenseOverlay, icon: const Icon(Icons.add))
+        ],
+      ),
+      body: width < 600
+          ? Column(
+              children: [
+                Chart(expenses: _registeredExpenses),
+                //cuando hay casos donde una columna tiene otra columna dentro, flatter
+                //no sabe como manejar los espacios para ambas, se puede solucionar
+                //haciendo un wrap en la columna interna con el widget Expanded
+                Expanded(
+                  child: mainContent,
+                )
+              ],
             )
-          ],
-        ));
+          : Row(
+              children: [
+                Expanded(
+                  child: Chart(expenses: _registeredExpenses),
+                ),
+                Expanded(
+                  child: mainContent,
+                ),
+              ],
+            ),
+    );
   }
 }

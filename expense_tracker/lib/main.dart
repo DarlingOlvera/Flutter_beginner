@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/widgets/expenses.dart';
 
+//import para habilitar el lock de screen horientation
+//import 'package:flutter/services.dart';
+
 var kColorScheme =
     ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 7, 34, 39));
 
@@ -10,6 +13,14 @@ var kDarkColorScheme = ColorScheme.fromSeed(
 );
 
 void main() {
+  //esto se requiere para asegurar que se bloquee la horientacion y luego se inicie la app
+  /* WidgetsFlutterBinding.ensureInitialized();
+  //lock screen horientation to portrait only
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]).then((fn) {
+    //move all your runApp() inside this then
+  }); */
   runApp(
     MaterialApp(
       //tema para el modo oscuro
