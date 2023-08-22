@@ -15,10 +15,14 @@ class ExpenseItem extends StatelessWidget {
           vertical: 20,
         ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               expense.title,
-              style: GoogleFonts.raleway(),
+              style: GoogleFonts.raleway(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
             ),
             const SizedBox(
               height: 4,

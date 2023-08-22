@@ -190,20 +190,23 @@ class _NewExpenseState extends State<NewExpense> {
               onPressed: _submitForm,
               child: Text(
                 'Save expense',
-                style: GoogleFonts.raleway(),
+                style: GoogleFonts.raleway(fontWeight: FontWeight.w700),
               ),
             ),
             const SizedBox(
               width: 12,
             ),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.error,
+              ),
               onPressed: () {
                 //clase proporcionada por flutter
                 Navigator.pop(context); //pop remueve el overlay de la pantalla
               },
               child: Text(
                 'Cancel',
-                style: GoogleFonts.raleway(),
+                style: GoogleFonts.raleway(fontWeight: FontWeight.w700),
               ),
             ),
           ],

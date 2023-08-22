@@ -38,3 +38,27 @@ class Expense {
     return formatter.format(date);
   }
 }
+
+class ExpenseBucket {
+  const ExpenseBucket({required this.category, required this.expenses});
+
+  //alternative constructor function, in this case its an utility constructor to filter all the expenses
+  //of a certain category
+  ExpenseBucket.forCategory(List<Expense> allExpenses, this.category)
+      : expenses = allExpenses
+            .where((element) => element.category == category)
+            .toList();
+
+  final Category category;
+  final List<Expense> expenses;
+
+  double get totalExpenses {
+    double sum = 0;
+
+    for (final item in expenses) {
+      sum += item.amount;
+    }
+
+    return sum;
+  }
+}

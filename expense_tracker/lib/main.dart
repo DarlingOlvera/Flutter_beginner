@@ -1,13 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/widgets/expenses.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 var kColorScheme =
     ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 7, 34, 39));
 
+var kDarkColorScheme = ColorScheme.fromSeed(
+  brightness: Brightness.dark,
+  seedColor: const Color.fromARGB(255, 64, 248, 255),
+);
+
 void main() {
   runApp(
     MaterialApp(
+      //tema para el modo oscuro
+      darkTheme: ThemeData.dark().copyWith(
+        useMaterial3: true,
+        colorScheme: kDarkColorScheme,
+        cardTheme: const CardTheme().copyWith(
+          color: kDarkColorScheme.secondaryContainer,
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            elevation: 0,
+            backgroundColor: kDarkColorScheme.onPrimaryContainer,
+            foregroundColor: kDarkColorScheme.onPrimary,
+          ),
+        ),
+      ),
+      //tema para el modo normal
       theme: ThemeData().copyWith(
         useMaterial3: true,
         colorScheme: kColorScheme,
@@ -35,6 +56,8 @@ void main() {
               titleSmall: const TextStyle(fontSize: 14),
             ),
       ),
+      //controlar cuando se usa cada tema en la app
+      //themeMode: ThemeMode.system, está por default
       home: const Expenses(),
     ),
   );
