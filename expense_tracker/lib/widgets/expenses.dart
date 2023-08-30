@@ -34,6 +34,8 @@ class _ExpensesState extends State<Expenses> {
   void _expenseOverlay() {
     showModalBottomSheet(
       context: context,
+      useSafeArea:
+          true, //safeArea se asegura que el UI se mantenga lejos de fitures del telefono como la camara
       isScrollControlled: true,
       builder: (modalContext) => NewExpense(onAddExpense: _addExpense),
     );
