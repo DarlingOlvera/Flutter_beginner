@@ -6,10 +6,16 @@ import 'package:meals_app/widgets/meal_item.dart';
 import 'package:meals_app/data/dummy_data.dart';
 
 class MealsScreen extends StatelessWidget {
-  const MealsScreen({super.key, required this.category, required this.meals});
+  const MealsScreen({
+    super.key,
+    this.category,
+    required this.meals,
+    required this.onToggleFavorite,
+  });
 
-  final Category category;
+  final Category? category;
   final List<Meal> meals;
+  final void Function(Meal meal) onToggleFavorite;
 
   void _selectedMeal(BuildContext context, Meal meal) {
     //filtra las comidas cuyas categorias ids concuerden con la de la categoria pasada como parametro
@@ -22,6 +28,7 @@ class MealsScreen extends StatelessWidget {
       MaterialPageRoute(
         builder: (context) => SingleMealScreen(
           meal: principalMeal[0],
+          onToggleFavorites: onToggleFavorite,
         ),
       ),
     ); //Navigator.of(context).push(route) es lo mismo
@@ -64,19 +71,21 @@ class MealsScreen extends StatelessWidget {
         ),
       );
     }
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          category.title,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 24,
+    if (category != null) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            category!.title,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 24,
+            ),
           ),
+          backgroundColor: category!.color.withOpacity(0.7),
         ),
-        backgroundColor: category.color.withOpacity(0.7),
-      ),
-      body: content,
-    );
+        body: content,
+      );
+    }
+    return content;
   }
 }
