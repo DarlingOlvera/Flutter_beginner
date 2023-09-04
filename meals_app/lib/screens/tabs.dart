@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:meals_app/data/dummy_data.dart';
 import 'package:meals_app/screens/categories.dart';
 import 'package:meals_app/screens/filters.dart';
 import 'package:meals_app/screens/meals.dart';
 import 'package:meals_app/models/meal.dart';
 import 'package:meals_app/widgets/main_drawer.dart';
+
+const kInitialFilters = {
+  Filter.glutenFree: false,
+  Filter.lactoseFree: false,
+  Filter.vegetarian: false,
+  Filter.vegan: false
+}; //k al principio es la convencion recomendada de flutter para el nombre de variables globales
 
 class TabsScreen extends StatefulWidget {
   const TabsScreen({super.key});
@@ -15,6 +23,7 @@ class TabsScreen extends StatefulWidget {
 class _TabsScreenState extends State<TabsScreen> {
   int _selectedPageIndex = 0; // 0 = categories page 1 = favorites page
   final List<Meal> _favoriteMeals = [];
+  Map<Filter, bool> _selectedFilters = kInitialFilters;
 
   void _showInfoMessage(String msg) {
     ScaffoldMessenger.of(context).clearSnackBars();
@@ -51,21 +60,44 @@ class _TabsScreenState extends State<TabsScreen> {
   void _setScreen(String identifier) async {
     Navigator.of(context).pop();
     if (identifier == 'filters') {
-      final result =
-          await Navigator.of(context).pushReplacement<Map<Filter, bool>, void>(
+      final result = await Navigator.of(context).push<Map<Filter, bool>>(
         MaterialPageRoute(
-          builder: (ctx) => const FiltersScreen(),
+          builder: (ctx) => FiltersScreen(
+            currentFilters: _selectedFilters,
+          ),
         ),
       );
 
-      print('result here: $result');
+      //print('result here: $result');
+      setState(() {
+        _selectedFilters = result ??
+            kInitialFilters; //?? revisa si el valor es nulo y en caso de serlo permite la asignacion de un valor por defecto
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final availableMeals = dummyMeals.where((element) {
+      if (_selectedFilters[Filter.glutenFree]! && !element.isGlutenFree) {
+        // se checa si el filtro es true y si la comida NO es gluten-free, entonces no se agrega a la lista
+        //de modo que aqui se regresa false
+        return false;
+      }
+      if (_selectedFilters[Filter.lactoseFree]! && !element.isLactoseFree) {
+        return false;
+      }
+      if (_selectedFilters[Filter.vegetarian]! && !element.isVegetarian) {
+        return false;
+      }
+      if (_selectedFilters[Filter.vegan]! && !element.isVegan) {
+        return false;
+      }
+      return true;
+    }).toList();
     Widget activepage = CategoriesScreen(
       onToggleFavorite: _toggleMealFavoriteStatus,
+      availableMeals: availableMeals,
     );
     var activePageTitle = 'Categories';
 
