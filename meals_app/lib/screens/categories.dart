@@ -6,12 +6,8 @@ import 'package:meals_app/models/category.dart';
 import 'package:meals_app/models/meal.dart';
 
 class CategoriesScreen extends StatelessWidget {
-  const CategoriesScreen(
-      {super.key,
-      required this.onToggleFavorite,
-      required this.availableMeals});
+  const CategoriesScreen({super.key, required this.availableMeals});
 
-  final void Function(Meal meal) onToggleFavorite;
   final List<Meal> availableMeals;
   void _selectCategory(BuildContext context, Category category) {
     //filtra las comidas cuyas categorias ids concuerden con la de la categoria pasada como parametro
@@ -26,7 +22,6 @@ class CategoriesScreen extends StatelessWidget {
         builder: (context) => MealsScreen(
           category: category,
           meals: filteredMeals,
-          onToggleFavorite: onToggleFavorite,
         ),
       ),
     ); //Navigator.of(context).push(route) es lo mismo
