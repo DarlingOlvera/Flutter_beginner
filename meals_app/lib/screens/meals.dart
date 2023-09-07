@@ -10,12 +10,10 @@ class MealsScreen extends StatelessWidget {
     super.key,
     this.category,
     required this.meals,
-    required this.onToggleFavorite,
   });
 
   final Category? category;
   final List<Meal> meals;
-  final void Function(Meal meal) onToggleFavorite;
 
   void _selectedMeal(BuildContext context, Meal meal) {
     //filtra las comidas cuyas categorias ids concuerden con la de la categoria pasada como parametro
@@ -28,7 +26,6 @@ class MealsScreen extends StatelessWidget {
       MaterialPageRoute(
         builder: (context) => SingleMealScreen(
           meal: principalMeal[0],
-          onToggleFavorites: onToggleFavorite,
         ),
       ),
     ); //Navigator.of(context).push(route) es lo mismo
