@@ -1,6 +1,9 @@
+import 'package:favorite_places/widgets/image_input.dart';
+import 'package:favorite_places/widgets/location_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:favorite_places/providers/user_places.dart';
+import 'dart:io';
 
 class NewPlace extends ConsumerStatefulWidget {
   const NewPlace({super.key});
@@ -12,12 +15,15 @@ class NewPlace extends ConsumerStatefulWidget {
 class _NewPlaceState extends ConsumerState<NewPlace> {
   final _formKey = GlobalKey<FormState>();
   var _enteredTitle = '';
+  File? _selectedImage;
 
   void _savePlace() {
-    if (_formKey.currentState!.validate()) {
+    if (_formKey.currentState!.validate() || _selectedImage == null) {
       _formKey.currentState!.save();
 
-      ref.read(userPlacesProvider.notifier).addPlace(_enteredTitle);
+      ref
+          .read(userPlacesProvider.notifier)
+          .addPlace(_enteredTitle, _selectedImage!);
       Navigator.of(context).pop();
     }
   }
@@ -35,7 +41,7 @@ class _NewPlaceState extends ConsumerState<NewPlace> {
         ),
         backgroundColor: Theme.of(context).colorScheme.secondary,
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(
           vertical: 24,
           horizontal: 12,
@@ -69,6 +75,19 @@ class _NewPlaceState extends ConsumerState<NewPlace> {
                   _enteredTitle = value!;
                 },
               ),
+              const SizedBox(
+                height: 12,
+              ),
+              //Image input
+              ImageInput(
+                onSelectedImage: (image) {
+                  _selectedImage = image;
+                },
+              ),
+              const SizedBox(
+                height: 12,
+              ),
+              LocationInput(),
               const SizedBox(
                 height: 12,
               ),

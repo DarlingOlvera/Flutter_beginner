@@ -19,6 +19,16 @@ class PlaceDetails extends StatelessWidget {
         ),
         backgroundColor: Theme.of(context).colorScheme.secondary,
       ),
+      body: Stack(
+        children: [
+          Image.file(
+            place.image,
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
+          ),
+        ],
+      ),
     );
   }
 }

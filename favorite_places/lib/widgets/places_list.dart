@@ -30,12 +30,15 @@ class PlacesList extends StatelessWidget {
               builder: (ctx) => PlaceDetails(place: places[index])));
         },
         child: ListTile(
+          leading: CircleAvatar(
+            radius: 25,
+            backgroundImage: FileImage(places[index].image),
+          ),
           title: Text(
             places[index].title,
-            style: Theme.of(context)
-                .textTheme
-                .bodyLarge!
-                .copyWith(color: Theme.of(context).colorScheme.onBackground),
+            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                color: Theme.of(context).colorScheme.onBackground,
+                fontSize: 18),
           ),
         ),
       ),
