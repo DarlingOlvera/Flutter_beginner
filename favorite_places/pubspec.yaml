@@ -45,6 +45,10 @@ dependencies:
       url: https://github.com/781flyingdutchman/flutterlocation.git
       ref: V4
       path: packages/location
+  flutter_map: ^5.0.0
+  path_provider: ^2.1.1
+  path: ^1.8.3
+  sqflite: ^2.3.0
 
 dev_dependencies:
   flutter_test:

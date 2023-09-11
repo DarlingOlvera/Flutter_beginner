@@ -29,16 +29,19 @@ class PlacesList extends StatelessWidget {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (ctx) => PlaceDetails(place: places[index])));
         },
-        child: ListTile(
-          leading: CircleAvatar(
-            radius: 25,
-            backgroundImage: FileImage(places[index].image),
-          ),
-          title: Text(
-            places[index].title,
-            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                color: Theme.of(context).colorScheme.onBackground,
-                fontSize: 18),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 8),
+          child: ListTile(
+            leading: CircleAvatar(
+              radius: 25,
+              backgroundImage: FileImage(places[index].image),
+            ),
+            title: Text(
+              places[index].title,
+              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                  color: Theme.of(context).colorScheme.onBackground,
+                  fontSize: 18),
+            ),
           ),
         ),
       ),

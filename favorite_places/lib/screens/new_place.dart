@@ -15,6 +15,7 @@ class NewPlace extends ConsumerStatefulWidget {
 class _NewPlaceState extends ConsumerState<NewPlace> {
   final _formKey = GlobalKey<FormState>();
   var _enteredTitle = '';
+  var _enteredDescription = '';
   File? _selectedImage;
 
   void _savePlace() {
@@ -23,7 +24,7 @@ class _NewPlaceState extends ConsumerState<NewPlace> {
 
       ref
           .read(userPlacesProvider.notifier)
-          .addPlace(_enteredTitle, _selectedImage!);
+          .addPlace(_enteredTitle, _enteredDescription, _selectedImage!);
       Navigator.of(context).pop();
     }
   }
@@ -76,6 +77,24 @@ class _NewPlaceState extends ConsumerState<NewPlace> {
                 },
               ),
               const SizedBox(
+                height: 4,
+              ),
+              TextFormField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  label: const Text('Description'),
+                ),
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onBackground,
+                ),
+                maxLines: 3,
+                onSaved: (value) {
+                  _enteredDescription = value!;
+                },
+              ),
+              const SizedBox(
                 height: 12,
               ),
               //Image input
@@ -87,12 +106,12 @@ class _NewPlaceState extends ConsumerState<NewPlace> {
               const SizedBox(
                 height: 12,
               ),
-              LocationInput(),
-              const SizedBox(
+              //LocationInput(),
+              /*  const SizedBox(
                 height: 12,
-              ),
+              ), */
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
                     onPressed: _savePlace,

@@ -48,12 +48,14 @@ class _LocationInputState extends State<LocationInput> {
     print(
       'location data: ${locationData.latitude} - ${locationData.longitude}',
     );
+
+    //TODO: buscar api alternativa a maps y hacer lo de la localizacion
   }
 
   @override
   Widget build(BuildContext context) {
     Widget previewContent = Text(
-      'No location selected yet',
+      'No location selected yet(coming soon...)',
       textAlign: TextAlign.center,
       style: Theme.of(context)
           .textTheme
