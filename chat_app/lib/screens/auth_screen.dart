@@ -1,5 +1,11 @@
+import 'package:chat_app/widgets/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:io';
+
+final _firebase = FirebaseAuth.instance;
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -13,14 +19,47 @@ class _AuthScreenState extends State<AuthScreen> {
   var _isLogin = true;
   var _email = '';
   var _password = '';
+  var _isAuthenticating = false;
+  File? _image;
 
-  void _onSubmit() {
+  void _onSubmit() async {
     final isValid = _formKey.currentState!.validate();
 
-    if (isValid) {
-      _formKey.currentState!.save();
-      print(_email);
-      print(_password);
+    if (!isValid || !_isLogin && _image == null) {
+      return;
+    }
+
+    _formKey.currentState!.save();
+
+    try {
+      setState(() {
+        _isAuthenticating = true;
+      });
+      if (_isLogin) {
+        final userCredentials = await _firebase.signInWithEmailAndPassword(
+            email: _email, password: _password);
+      } else {
+        final userCredentials = await _firebase.createUserWithEmailAndPassword(
+            email: _email, password: _password);
+
+        final storageRef = FirebaseStorage.instance
+            .ref()
+            .child('user_images')
+            .child('${userCredentials.user!.uid}.jpg');
+        await storageRef.putFile(_image!);
+        final imageUrl = await storageRef.getDownloadURL();
+        print(imageUrl);
+      }
+    } on FirebaseAuthException catch (error) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(error.message ?? 'Authentication failed'),
+        ),
+      );
+      setState(() {
+        _isAuthenticating = false;
+      });
     }
   }
 
@@ -52,6 +91,12 @@ class _AuthScreenState extends State<AuthScreen> {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
+                            if (!_isLogin)
+                              ImagePickerWidget(
+                                onPickImage: (pickedImage) {
+                                  _image = pickedImage;
+                                },
+                              ),
                             TextFormField(
                               decoration: InputDecoration(
                                 labelText: 'Email Address',
@@ -91,8 +136,11 @@ class _AuthScreenState extends State<AuthScreen> {
                               ),
                               obscureText: true, //esconde los caracteres
                               validator: (value) {
-                                if (value == null || value.trim().length < 8) {
-                                  return 'Password must be at least 6 characters long';
+                                if (!_isLogin) {
+                                  if (value == null ||
+                                      value.trim().length < 8) {
+                                    return 'Password must be at least 8 characters long';
+                                  }
                                 }
                                 return null;
                               },
@@ -103,20 +151,26 @@ class _AuthScreenState extends State<AuthScreen> {
                             const SizedBox(
                               height: 12,
                             ),
-                            ElevatedButton(
-                              onPressed: _onSubmit,
-                              child: Text(_isLogin ? 'Log in' : 'Sign up'),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                setState(() {
-                                  _isLogin = !_isLogin;
-                                });
-                              },
-                              child: Text(_isLogin
-                                  ? 'Create an account'
-                                  : 'I already have an account'),
-                            ),
+                            if (_isAuthenticating)
+                              CircularProgressIndicator(
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                            if (!_isAuthenticating)
+                              ElevatedButton(
+                                onPressed: _onSubmit,
+                                child: Text(_isLogin ? 'Log in' : 'Sign up'),
+                              ),
+                            if (!_isAuthenticating)
+                              TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _isLogin = !_isLogin;
+                                  });
+                                },
+                                child: Text(_isLogin
+                                    ? 'Create an account'
+                                    : 'I already have an account'),
+                              ),
                           ],
                         ),
                       ),
@@ -129,7 +183,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 left: 100,
                 right: 100,
                 child: Container(
-                  padding: EdgeInsets.only(top: 65),
+                  padding: const EdgeInsets.only(top: 65),
                   margin: const EdgeInsets.only(
                     top: 30,
                     left: 20,
