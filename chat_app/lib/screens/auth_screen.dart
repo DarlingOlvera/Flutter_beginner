@@ -1,9 +1,10 @@
+import 'dart:io';
 import 'package:chat_app/widgets/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 final _firebase = FirebaseAuth.instance;
 
@@ -20,6 +21,7 @@ class _AuthScreenState extends State<AuthScreen> {
   var _email = '';
   var _password = '';
   var _isAuthenticating = false;
+  var _username = '';
   File? _image;
 
   void _onSubmit() async {
@@ -48,7 +50,15 @@ class _AuthScreenState extends State<AuthScreen> {
             .child('${userCredentials.user!.uid}.jpg');
         await storageRef.putFile(_image!);
         final imageUrl = await storageRef.getDownloadURL();
-        print(imageUrl);
+
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userCredentials.user!.uid)
+            .set({
+          'username': _username,
+          'email': _email,
+          'image_url': imageUrl,
+        });
       }
     } on FirebaseAuthException catch (error) {
       ScaffoldMessenger.of(context).clearSnackBars();
@@ -126,6 +136,33 @@ class _AuthScreenState extends State<AuthScreen> {
                             const SizedBox(
                               height: 12,
                             ),
+                            if (!_isLogin)
+                              TextFormField(
+                                decoration: InputDecoration(
+                                  labelText: 'Username',
+                                  isDense: true,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                enableSuggestions: false,
+                                validator: (value) {
+                                  if (value == null ||
+                                      value.isEmpty ||
+                                      value.trim().length < 4) {
+                                    return 'Please entera username with at least 4 characters';
+                                  }
+
+                                  return null;
+                                },
+                                onSaved: (value) {
+                                  _username = value!;
+                                },
+                              ),
+                            if (!_isLogin)
+                              const SizedBox(
+                                height: 12,
+                              ),
                             TextFormField(
                               decoration: InputDecoration(
                                 labelText: 'Password',
